@@ -136,7 +136,7 @@ detect_signing_identity() {
     fi
 
     local identity
-    identity="$(security find-identity -v -p codesigning 2>/dev/null | sed -n 's/.*"\\(Developer ID Application:.*\\)"/\1/p' | head -n 1)"
+    identity="$(security find-identity -v -p codesigning 2>/dev/null | awk -F'"' '/Developer ID Application:/ { print $2; exit }')"
     [[ -n "$identity" ]] || fail "Could not find a Developer ID Application identity in the local keychain."
     echo "$identity"
 }
